@@ -2,7 +2,24 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Person
 from .forms import PersonForm
+import openpyxl
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse
 
+from django.contrib.auth import get_user_model
+def create_superuser(request):
+    User = get_user_model()
+
+    if User.objects.filter(username="admin").exists():
+        return HttpResponse("Superuser already exists")
+
+    User.objects.create_superuser(
+        username="admin",
+        email="admin@example.com",
+        password="Admin@123"
+    )
+
+    return HttpResponse("Superuser created")
 # 1. Home Page: Shows list of all registered people
 @login_required
 def home(request):
@@ -58,4 +75,43 @@ def review_person(request):
         person.save()
         return redirect('home')
 
+
     return render(request, 'collector/review.html', {'person': person})
+
+
+# 4. Superuser Export View
+@user_passes_test(lambda u: u.is_superuser)
+def export_excel(request):
+    # 1. Create a workbook and sheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Registered Users"
+
+    # 2. Add Headers (Make them bold if you want, but simple is fine)
+    headers = ['Name', 'Address', 'Email', 'Phone', 'Technology']
+    ws.append(headers)
+
+    # 3. Query the data (Only locked/confirmed users)
+    people = Person.objects.filter(is_locked=True)
+
+    # 4. Write data rows
+    for person in people:
+        ws.append([
+            person.name,
+            person.address,
+            person.email,
+            person.phone_number,
+            person.get_preferred_technology_display() # Gets the label "Python" instead of "python"
+        ])
+
+    # 5. Prepare the response
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    # This sets the filename
+    response['Content-Disposition'] = 'attachment; filename=registry_data.xlsx'
+    
+    # Save the workbook to the response
+    wb.save(response)
+    
+    return response
