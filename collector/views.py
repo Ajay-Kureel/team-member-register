@@ -16,7 +16,7 @@ def create_superuser(request):
     User.objects.create_superuser(
         username="admin",
         email="admin@example.com",
-        password="Admin@123"
+        password="asdf4321"
     )
 
     return HttpResponse("Superuser created")
@@ -115,3 +115,4 @@ def export_excel(request):
     wb.save(response)
     
     return response
+
