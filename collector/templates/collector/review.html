@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --warning-bg: #fffaf0;
+            --warning-border: #fbd38d;
+            --warning-text: #c05621;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .review-card {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            padding: 0;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden; /* Clips the header image if you add one later */
+        }
+
+        .card-header {
+            padding: 30px 30px 10px;
+            text-align: center;
+        }
+
+        .card-header h2 { margin: 0; color: #2d3748; }
+        
+        /* Warning Box */
+        .warning-box {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            color: var(--warning-text);
+            margin: 15px 30px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Data List */
+        .data-list {
+            padding: 0 30px 20px;
+        }
+
+        .data-item {
+            border-bottom: 1px solid #edf2f7;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .data-item:last-child { border-bottom: none; }
+
+        .label {
+            color: #718096;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .value {
+            color: #2d3748;
+            font-weight: 600;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* Action Buttons Area */
+        .actions {
+            background: #f7fafc;
+            padding: 25px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: transform 0.2s;
+        }
+
+        .btn:active { transform: scale(0.98); }
+
+        .btn-confirm {
+            background: #48bb78;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-edit {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="review-card">
+        <div class="card-header">
+            <div style="font-size: 2.5rem; color: #f6ad55; margin-bottom: 10px;">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <h2>Final Review</h2>
+        </div>
+
+        <div class="warning-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Warning: Once you click "Confirm", this data is locked permanently.</span>
+        </div>
+
+        <div class="data-list">
+            <div class="data-item">
+                <span class="label">Full Name</span>
+                <span class="value">{{ person.name }}</span>
+            </div>
+            <div class="data-item">
+                <span class="label">Address</span>
+                <span class="value">{{ person.address }}</span>
+            </div>
+            <div class="data-item">
+                <span class="label">Email</span>
+                <span class="value">{{ person.email }}</span>
+            </div>
+            <div class="data-item">
+                <span class="label">Phone</span>
+                <span class="value">{{ person.phone_number }}</span>
+            </div>
+            <div class="data-item">
+                <span class="label">Technology</span>
+                <span class="value" style="color: #667eea;">{{ person.get_preferred_technology_display }}</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <form method="post" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-confirm">
+                    <i class="fas fa-check-circle"></i> Confirm & Lock Data
+                </button>
+            </form>
+            
+            <a href="{% url 'fill_form' %}" class="btn btn-edit">
+                <i class="fas fa-pencil-alt"></i> Go Back & Edit
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
