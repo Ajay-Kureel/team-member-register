@@ -203,6 +203,31 @@
                 <p style="color: #718096;">Your profile is submitted and locked.</p>
             {% endif %}
         </div>
+        {% if request.user.is_superuser %}
+        <div style="margin-bottom: 25px;">
+            <div class="section-title" style="color: #d53f8c;">
+                <i class="fas fa-user-shield"></i> Admin Controls
+            </div>
+            
+            <a href="{% url 'export_excel' %}" style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                background: linear-gradient(135deg, #108542 0%, #15ba5a 100%); /* Excel Green */
+                color: white;
+                text-decoration: none;
+                padding: 15px;
+                border-radius: 16px;
+                font-weight: 600;
+                box-shadow: 0 4px 15px rgba(21, 186, 90, 0.3);
+                transition: transform 0.2s;
+            ">
+                <i class="fas fa-file-excel" style="font-size: 1.2rem;"></i>
+                Download Excel Report
+            </a>
+        </div>
+        {% endif %}
 
         <div class="section-title">
             <i class="fas fa-users"></i> Community Members
